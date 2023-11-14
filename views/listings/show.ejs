@@ -1,0 +1,88 @@
+<% layout("/layouts/boilerplate.ejs")-%>
+<div class="row">
+    <div class="col-8 offset-2">
+<h3>Listing details</h3>
+</div>
+<div class="card col-6 offset-2">
+    <img src="<%=listing.image.url%>" class="card-img-top show-img" alt="listing image">
+  <div class="card-body">
+    <p class="card-text">
+        <b><%=listing.title%></b><br>
+      <p class="card-text">  <i><%= listing.owner.username%> </i></p>
+        <br>
+        <p class="card-text"><%= listing.description%> <br></p>
+       <p class="card-text" > &#8377; <%= listing.price%> <br></p>
+       <p class="card-text"> <%= listing.location%> <br></p>
+      <p class="card-text">  <%= listing.country%></p>
+      <p class="card-text">  <%= listing.category%></p>
+    </p>
+  </div>
+</div>
+
+    <br>
+    <!-- the below is done to check current user is equal to the owner user of that listing if not than hide edit and delete button else not -->
+    <%if(currUser && currUser._id.equals(listing.owner._id)){%>
+    <div class="btns">
+        <a href="/listings/<%=listing._id%>/edit" class="btn btn-dark col-1 offset-2">Edit</a>
+     
+         <form method="POST" action="/listings/<%=listing._id%>?_method=DELETE">
+        <button class="btn btn-dark  offset-4">Delete</button>
+    </form>
+</div>
+<%}%>
+
+<div class="col-8 offset-3">
+    <hr>
+    <%if(currUser){%>
+    <h4>Leave a review</h4>
+    <form method ="POST" action="/listings/<%= listing._id%>/reviews" method="POST" novalidate class="needs-validation">
+
+<div class="mb-3 mt-3">
+    <label for="comment" class="form-label">Comments</label>
+    <textarea name="review[comment]" id="comment" cols="30" rows="5" class="form-control" required></textarea>
+</div>
+<button class="btn btn-outline-dark">Submit</button>
+    </form>
+    <%}%>
+  <% if(listing.reviews.length > 0){%>  
+    <div class="row">
+        <p><b>All Reviws</b></p>
+    <% for(review of listing.reviews){%>
+        <div class="card col-5 ms-3 mb-3">
+            <div class="card-body">
+                <h5 class="card-title">@<%=review.author.username%></h5>
+                <p class="card-text"><%=review.comment%></p>
+        </div>
+        <form method="POST" action="/listings/<%=listing._id%>/reviews/<%=review._id%>?_method=DELETE"class="mb-3">
+<button class = "btn btn-sm btn-dark">Delete</button>
+        </form>
+        </div>
+    <%}%>
+    </div>
+    <%}%>
+</div>
+<div class="col-6 offset-3 mb-3">
+    <h3>Where you'll be</h3>
+    <div id="map"></div> 
+    </div>
+    </div>
+    <script>
+        const coordinates = JSON.parse("<%- JSON.stringify(listing.geometry.coordinates)%>");
+        let mapToken = "<%= process.env.MAP_TOKEN%>";
+        mapboxgl.accessToken = mapToken;
+    const map = new mapboxgl.Map({
+    container: 'map', // container ID
+    // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
+    style: 'mapbox://styles/mapbox/streets-v12', // style URL
+    center: coordinates, // starting position [lng, lat]
+    zoom: 9 // starting zoom
+    //we need to convert address into latitudes and longitudes 
+    });
+    // Create a default Marker and add it to the map.
+const marker1 = new mapboxgl.Marker()
+.setLngLat(listing.geometry.coordinates)
+.addTo(map);
+alert('Coordinates: '+coordinates);
+    </script>
+    
+

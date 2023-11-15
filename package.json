@@ -5,8 +5,9 @@
   "name": "megaproject",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
+    "start":"node -r dotenv/config app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

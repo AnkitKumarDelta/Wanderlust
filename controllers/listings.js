@@ -137,7 +137,9 @@ if (filteredListings.length === 0) {
   
     try {
       // Fetch listings based on the specified country
-      const listingsInCountry = await Listing.find({ "location.country": country }).populate("owner");
+      const listingsInCountry = await Listing.find({
+        "location.country": { $regex: new RegExp(country, 'i') },
+      }).populate("owner");
       await Listing.populate(listingsInCountry, { path: "reviews" });
   
       if (listingsInCountry.length === 0) {

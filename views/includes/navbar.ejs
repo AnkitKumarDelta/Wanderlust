@@ -10,10 +10,10 @@
           </div>
           <div class="navbar-nav ms-auto">
               <form class="d-flex" role="search">
-                  <input class="form-control me-2 search-input" type="search" placeholder="Search Destinations"
+                  <input id="searchInput" class="form-control me-2 search-input" type="search" placeholder="Search Destinations by country"
                       aria-label="Search">
-                  <button class="btn btn-search" type="submit"><i
-                          class="fa-solid fa-magnifying-glass"></i>Search</button>
+                  <a id="searchLink" href="/listings/country" class="btn btn-search" ><i
+                          class="fa-solid fa-magnifying-glass"></i>Search</a>
               </form>
           </div>
           <div class="navbar-nav ms-auto">
@@ -29,3 +29,19 @@
       </div>
   </div>
 </nav>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('searchInput').addEventListener('input', function () {
+            var inputValue = this.value.trim().toLowerCase();
+            var searchLink = document.getElementById('searchLink');
+
+            // Update the search link href based on the user's input
+            searchLink.href = "/listings/country/" + inputValue;
+
+            // Optionally, you can handle the case where the input is empty
+            if (inputValue === "") {
+                searchLink.href = "/listings"; // Redirect to the default search page
+            }
+        });
+    });
+</script>

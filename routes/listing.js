@@ -11,6 +11,9 @@ const upload = multer({storage});//here multer save our files to storage of clou
 // Route to filter listings by category
 router.get("/category/:category", wrapAsync(listingController.filterByCategory));
 
+// Search route by country
+router.get("/country/:country", wrapAsync(listingController.searchByCountry));
+
 //we did this below because index and create both have same route
 router
 .route("/")

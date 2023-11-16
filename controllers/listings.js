@@ -132,5 +132,26 @@ if (filteredListings.length === 0) {
       res.redirect("/listings");
     }
   };
+  module.exports.searchByCountry = async (req, res) => {
+    const { country } = req.params;
+  
+    try {
+      // Fetch listings based on the specified country
+      const listingsInCountry = await Listing.find({ "location.country": country }).populate("owner");
+      await Listing.populate(listingsInCountry, { path: "reviews" });
+  
+      if (listingsInCountry.length === 0) {
+        req.flash("info", `No listings found for ${country}.`);
+        return res.redirect("/listings");
+      }
+  
+      res.render("listings/index.ejs", { allListings: listingsInCountry });
+    } catch (error) {
+      console.error(error);
+      req.flash("error", "An error occurred while fetching listings.");
+      res.redirect("/listings");
+    }
+  };
+  
 
 
